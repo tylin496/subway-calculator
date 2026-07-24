@@ -2872,7 +2872,12 @@ function renderHeroCalOdometer(el, value, decimals){
 
   cols.forEach((col, i)=>{
     const digit = Number(intPart[i])
-    col.style.transform = `translateY(${-digit * 56}px)`
+    // One cell is 1/10th of the column (10 digits, each .odo-digit-cell is
+    // 1em tall), so a percentage step stays exact whatever 1em resolves to.
+    // A hardcoded px step assumes a 16px root, which iOS Dynamic Type breaks
+    // (html{font:-apple-system-body}) — the column then parks between two
+    // digits and the strip shows half of each.
+    col.style.transform = `translateY(${-digit * 10}%)`
   })
   if(el._odoDecimalEl) el._odoDecimalEl.textContent = decPart
 

@@ -1528,8 +1528,11 @@ input[type="checkbox"]:active {
 .hero-result {
   padding: 8px 0 16px;
   /* Reserve the full stats height so the whole form doesn't jump down/up
-     when the empty state swaps with the calorie readout. */
-  min-height: 115px;
+     when the empty state swaps with the calorie readout. In rem, not px, so
+     the reservation grows with the readout under iOS Dynamic Type — the
+     stats block is sized in rem too, and a px floor under-reserves as soon
+     as the user's text size goes above the 16px default. */
+  min-height: 7.1875rem;
   display: flex;
   align-items: flex-start;
 }
