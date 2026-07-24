@@ -912,6 +912,18 @@ document.addEventListener("touchstart", (e)=>{
   closeOtherSwipeRows()
 }, { passive: true })
 
+// Category pills and "recent" rows only overflow horizontally, but a desktop
+// mouse wheel only ever produces vertical delta — redirect it to scrollLeft
+// so they're reachable without a trackpad's sideways swipe.
+document.addEventListener("wheel", (e)=>{
+  const scroller = e.target.closest(".modal-categories, .modal-recent-row")
+  if(!scroller) return
+  if(scroller.scrollWidth <= scroller.clientWidth) return
+  if(Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return
+  scroller.scrollLeft += e.deltaY
+  e.preventDefault()
+}, { passive: false })
+
 function openSauce1Picker(){
   if(isPickerTapSuppressed()) return
   openSaucePicker("sauce1")

@@ -1,11 +1,14 @@
-# 🥪 Sandwich Calculator
+# 🥪 Subway Calculator
 
-Mobile-first Subway-style nutrition calculator with iOS-inspired UI.  
-以手機體驗為核心、帶有 iOS 風格互動的 Subway 營養計算工具。
+Unofficial mobile-first calorie and protein calculator for 6" Subway® subs, with an iOS-inspired UI.  
+非官方的 Subway® 潛艇堡熱量與蛋白質計算器，以手機體驗為核心，帶有 iOS 風格互動。
+
+> ⚠️ **Unofficial project.** Not affiliated with, endorsed by, or sponsored by SUBWAY® or Subway IP LLC. "SUBWAY" is a trademark of its respective owner and is used here only to describe what this tool calculates.  
+> ⚠️ **非官方專案。**與 SUBWAY® 無任何關聯，未經其授權或背書。「SUBWAY」為其權利人之商標，此處僅用於說明本工具的用途。
 
 ## 🚀 Live Demo / 線上版本
 
-https://thom436.github.io/sandwichcalculator.com/
+https://thom436.github.io/subway-calculator/
 
 ## ✨ Features / 功能特色
 
