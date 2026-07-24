@@ -143,11 +143,21 @@ const HISTORY_LIMIT = 8
 // hiding the modal earlier truncates the slide-out and the panel snaps away.
 const MODAL_ANIM_MS = 440
 
+// Which sheet is logically open. Reading this back off the DOM is wrong
+// during a close: the modal keeps display:block until the slide-out finishes,
+// which held body.modal-open — and with it the background push-back — for an
+// extra MODAL_ANIM_MS, so the page snapped back only after the sheet was gone.
+let activeModalId = null
+
 function setModalOpenState(){
-  const hasOpenModal = MODAL_IDS.some(id => {
-    const modal = document.getElementById(id)
-    return modal && (modal.classList.contains("is-open") || modal.style.display === "block")
-  })
+  const hasOpenModal = activeModalId !== null
+  const shell = document.querySelector(".app-shell")
+  if(shell && hasOpenModal){
+    // Pivot the push-back at the top of the *viewport*, not the top of the
+    // document. With a fixed 50% 0% origin, scaling a long page that's
+    // scrolled down drags whatever you were looking at upwards.
+    shell.style.transformOrigin = `50% ${Math.max(0, window.scrollY - shell.offsetTop)}px`
+  }
   document.body.classList.toggle("modal-open", hasOpenModal)
   // html is the real page scroller (html{overflow-x:hidden} blocks body
   // overflow propagation), so lock it too — otherwise the page can still
@@ -156,12 +166,17 @@ function setModalOpenState(){
 }
 
 function openModal(id, focusEl = null){
+  const modal = document.getElementById(id)
+  if(!modal) return
+
+  // Claim the open state before closing any sibling sheet, so the immediate
+  // close below can't blank body.modal-open mid-swap and flash the background
+  // back to full scale for a frame.
+  activeModalId = id
   MODAL_IDS.forEach((mid)=>{
     if(mid !== id) closeModal(mid, { immediate: true })
   })
 
-  const modal = document.getElementById(id)
-  if(!modal) return
   modal.style.display = "block"
   void modal.offsetWidth
   requestAnimationFrame(()=>{
@@ -195,6 +210,8 @@ function closeModal(id, options = {}){
   const panel = modal.querySelector(".sheet-panel")
   if(panel && !options.immediate) panel.style.transform = ""
 
+  if(activeModalId === id) activeModalId = null
+
   if(options.immediate){
     modal.classList.remove("is-open")
     modal.style.display = "none"
@@ -203,10 +220,13 @@ function closeModal(id, options = {}){
   }
 
   modal.classList.remove("is-open")
+  // Release the background push-back now, not when the modal is finally
+  // hidden — it shares --motion-slow with the sheet's slide-out, so the two
+  // animations run together instead of the page lurching back afterwards.
+  setModalOpenState()
   setTimeout(()=>{
     if(!modal.classList.contains("is-open")){
       modal.style.display = "none"
-      setModalOpenState()
     }
   }, MODAL_ANIM_MS)
 }

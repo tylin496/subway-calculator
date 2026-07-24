@@ -1900,9 +1900,11 @@ input[type="checkbox"]:active {
 
 /* 04 Sheet push-back — .app-shell is a sibling of every .sheet-modal, not an
    ancestor, so this transform can't disturb their own position:fixed panels.
-   .top-actions/.result are fixed *inside* .app-shell though, so a transform on
-   it would become their containing block and re-anchor their fixed offsets —
-   fade them out for the duration instead of letting that happen. */
+   .result *is* position:fixed inside .app-shell though, so this transform
+   becomes its containing block and re-anchors its offsets — fade it out for
+   the duration instead of letting that show.
+   transform-origin is overwritten inline by setModalOpenState() to sit at the
+   top of the viewport; the 50% 0% here is the unscrolled equivalent. */
 body.modal-open .app-shell {
   transform: scale(0.94) translateY(10px);
   border-radius: 20px;
