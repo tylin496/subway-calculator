@@ -592,9 +592,7 @@ function updateSaveButtonState(){
   btn.disabled = !hasCombo
   const saved = hasCombo && isCurrentComboSaved()
   btn.classList.toggle("saved", saved)
-  const textEl = btn.querySelector(".hero-btn-text")
-  if(textEl) textEl.textContent = saved ? "已收藏" : "收藏"
-  const label = saved ? "已收藏" : "收藏"
+  const label = saved ? "已收藏 Saved" : "收藏 Save"
   btn.setAttribute("aria-label", label)
   btn.setAttribute("title", label)
 }
@@ -719,7 +717,7 @@ function comboExtrasText(combo){
   const addons = (combo.addons || []).map(compactZhShareName)
   if(addons.length) parts.push(addons.join(" + "))
   const sauces = [combo.sauce1, combo.sauce2].filter(Boolean)
-  parts.push(sauces.length ? sauces.join(" + ") : "不加醬")
+  parts.push(sauces.length ? sauces.join(" + ") : NO_SAUCE_LABEL)
   return parts.join("｜")
 }
 
@@ -838,6 +836,7 @@ function renderHistoryItems(){
       applyCombo(combo)
       closeModal("historyModal")
     }
+    makeKeyboardClickable(div)
 
     itemsEl.appendChild(div)
   })
@@ -1365,7 +1364,7 @@ function updateMainPickerLabel(){
   if(!picker) return
 
   if(!value){
-    picker.textContent = "選擇主餐"
+    picker.textContent = "選擇主餐 Select main"
     picker.classList.remove("picker-field--bilingual-break")
     picker.classList.add("picker-field--placeholder")
     picker.classList.add("picker-field--plus")
@@ -1535,6 +1534,7 @@ function renderMainItems(group){
       closeModal("mainModal")
       calc()
     }
+    if(!isCurrentSelected) makeKeyboardClickable(div)
 
     itemsEl.appendChild(div)
   }
@@ -1756,6 +1756,7 @@ function renderAddonItems(group){
       saveRecentItem("addon", name)
       closeModal("addonModal")
     }
+    if(!(alreadySelected || isCurrentEditingValue)) makeKeyboardClickable(div)
     itemsEl.appendChild(div)
   }
 
@@ -1813,7 +1814,7 @@ function renderQuickSearchItems(){
     hint.style.padding = "14px 12px"
     hint.style.fontSize = "0.8125rem"
     hint.style.color = "#8e8e93"
-    hint.textContent = "輸入關鍵字以搜尋口味、加料、醬料"
+    hint.textContent = "輸入關鍵字以搜尋口味、加料、醬料 Search flavors, add-ons, sauces"
     itemsEl.appendChild(hint)
     return
   }
@@ -1904,6 +1905,7 @@ function renderQuickSearchItems(){
         closeQuickSearch()
         calc()
       }
+      makeKeyboardClickable(row)
     }
 
     itemsEl.appendChild(row)
@@ -1947,6 +1949,7 @@ function renderQuickSearchItems(){
         saveRecentItem("addon", name)
         closeQuickSearch()
       }
+      makeKeyboardClickable(row)
     }
 
     itemsEl.appendChild(row)
@@ -2018,6 +2021,7 @@ function renderQuickSearchItems(){
         closeQuickSearch()
         calc()
       }
+      makeKeyboardClickable(row)
     }
 
     itemsEl.appendChild(row)
@@ -2091,7 +2095,7 @@ function createAddonSelect(removable = true){
   const display = document.createElement("div")
   display.className = "picker-field picker-field-fill picker-field--placeholder"
   makeKeyboardClickable(display)
-  display.textContent = "尚未選擇加料"
+  display.textContent = "尚未選擇加料 No add-ons yet"
   display.onclick = (e)=>{
     e.stopPropagation()
     if(isPickerTapSuppressed()) return
@@ -2134,7 +2138,7 @@ function setAddonValue(wrapper, value){
   if(!hidden || !display) return
   hidden.value = value || ""
   if(!value){
-    display.textContent = "選擇加料"
+    display.textContent = "選擇加料 Select add-on"
     display.classList.add("picker-field--placeholder")
     return
   }
@@ -2244,7 +2248,7 @@ function updateAddonUI(){
   label.textContent = count > 0 ? `Add-ons (${count})` : "Add-ons"
   if(emptyPicker){
     emptyPicker.style.display = "flex"
-    emptyPicker.textContent = count === 0 ? "加入加料" : "再加一項"
+    emptyPicker.textContent = count === 0 ? "加入加料 Add extras" : "再加一項 Add more"
     emptyPicker.classList.toggle("picker-field--placeholder", count === 0)
     emptyPicker.classList.add("picker-field--plus")
   }
@@ -2254,7 +2258,7 @@ function updateAddonUI(){
 }
 
 function getSauceDisplayText(value){
-  if(!value) return "選擇醬料"
+  if(!value) return "選擇醬料 Select sauce"
   const en = sauceNameMap[value] || ""
   return en ? `${value} ${en}` : value
 }
@@ -2394,7 +2398,7 @@ function updateSaucePickerLabel(target = "sauce1"){
   const value = hidden ? hidden.value : ""
   if(display){
     if(!value){
-      display.textContent = "選擇第二種醬"
+      display.textContent = "選擇第二種醬 Select second sauce"
       display.classList.remove("picker-field--bilingual-break")
       display.classList.add("picker-field--placeholder")
       display.classList.add("picker-field--plus")
@@ -2452,7 +2456,7 @@ function renderSauceItems(){
     empty.style.padding = "14px 12px"
     empty.style.fontSize = "0.8125rem"
     empty.style.color = "#8e8e93"
-    empty.textContent = "目前沒有可選醬料"
+    empty.textContent = "目前沒有可選醬料 No sauces available"
     itemsEl.appendChild(empty)
     return
   }
@@ -2502,6 +2506,7 @@ function renderSauceItems(){
       closeModal("sauceModal")
       calc()
     }
+    if(!(isBlocked(name) || name === selectedValue)) makeKeyboardClickable(div)
 
     itemsEl.appendChild(div)
   }
@@ -2556,7 +2561,7 @@ function createSauceSelect(){
   display.dataset.role = "sauce-display"
   display.className = "picker-field picker-field-fill picker-field--placeholder picker-field--plus"
   makeKeyboardClickable(display)
-  display.textContent = "選擇第二種醬"
+  display.textContent = "選擇第二種醬 Select second sauce"
   display.onclick = (e)=>{
     e.stopPropagation()
     if(isPickerTapSuppressed()) return
@@ -2799,14 +2804,11 @@ function copyResultSummary(){
     btn.classList.add("copied")
     btn.setAttribute("aria-label", copiedAria)
     btn.setAttribute("title", copiedAria)
-    const textEl = btn.querySelector(".hero-btn-text")
-    if(textEl) textEl.textContent = "已複製"
     if(copyShareResetTimer) clearTimeout(copyShareResetTimer)
     copyShareResetTimer = setTimeout(()=>{
       btn.classList.remove("copied")
       btn.setAttribute("aria-label", defaultAria)
       btn.setAttribute("title", defaultAria)
-      if(textEl) textEl.textContent = "複製"
     }, 1800)
   }
 

@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="./icon-pwa.png" />
 
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20260709">
+<link rel="stylesheet" href="styles.css?v=20260725">
 </head>
 
 <body>
@@ -49,9 +49,9 @@
 </header>
 
 <div class="hero-result" id="heroResult">
-  <div class="hero-empty-state" id="heroEmptyState">選擇主餐以計算熱量</div>
+  <div class="hero-empty-state" id="heroEmptyState">選擇主餐以計算熱量 Select a main to calculate</div>
   <div class="hero-stats" id="heroStats" style="display:none;">
-    <div class="hero-numbers">
+    <div class="hero-numbers" aria-live="polite" aria-atomic="true">
       <div class="hero-cal-row">
         <span class="hero-cal-val" id="heroCalVal">0</span><span class="hero-cal-unit">kcal</span>
       </div>
@@ -60,18 +60,16 @@
       </div>
     </div>
     <div class="hero-actions">
-      <button id="copyShareBtn" class="hero-action-btn hero-action-btn--primary" type="button" aria-label="複製" title="複製" onclick="copyResultSummary()">
+      <button id="copyShareBtn" class="hero-action-btn hero-action-btn--primary" type="button" aria-label="複製結果 Copy result" title="複製結果 Copy result" onclick="copyResultSummary()">
         <svg class="hero-btn-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <rect x="9" y="9" width="10" height="10" rx="2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M5 15V5a2 2 0 0 1 2-2h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
         </svg>
-        <span class="hero-btn-text">複製</span>
       </button>
-      <button id="saveComboBtn" class="hero-action-btn result-save-btn" type="button" aria-label="收藏" title="收藏" onclick="saveCurrentComboFromResult()">
+      <button id="saveComboBtn" class="hero-action-btn result-save-btn" type="button" aria-label="收藏 Save" title="收藏 Save" onclick="saveCurrentComboFromResult()">
         <svg class="hero-btn-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path class="hero-heart-path" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
         </svg>
-        <span class="hero-btn-text">收藏</span>
       </button>
     </div>
   </div>
@@ -89,7 +87,7 @@
 </div>
 <div id="mainPickerRow" class="section-picker-top">
   <div id="mainPicker" class="picker-field picker-field--placeholder picker-field--plus" role="button" tabindex="0" onclick="openMainPicker()">
-    選擇主餐
+    選擇主餐 Select main
   </div>
 </div>
 <select id="main" onchange="calc()" style="display:none;"></select>
@@ -111,7 +109,7 @@
 </div>
 <div id="addonList" style="min-height:0;"></div>
 <div id="addonEmptyPicker" class="picker-field picker-field--placeholder picker-field--plus section-picker-top" role="button" tabindex="0" onclick="openAddonPicker(addonActiveGroup)">
-  加入加料
+  加入加料 Add extras
 </div>
 <div id="addonSwipeHint" class="swipe-hint" style="display:none;">左滑刪除 Swipe to delete</div>
 </section>
@@ -126,13 +124,13 @@
 </div>
 <div id="sauce1Row" class="section-picker-top">
   <div id="sauce1Picker" class="picker-field picker-field-fill picker-field--placeholder picker-field--plus" role="button" tabindex="0" onclick="openSauce1Picker()">
-    選擇醬料
+    選擇醬料 Select sauce
   </div>
   <span class="sauce-row-kcal" data-role="sauce-kcal" hidden><span data-role="sauce-kcal-num">0</span> kcal<span class="sauce-half-badge" data-role="sauce-half-badge" hidden>½</span></span>
 </div>
 <input type="hidden" id="sauce1" value="">
   <div id="sauce2EmptyPicker" class="picker-field picker-field--placeholder picker-field--plus stack-gap" role="button" tabindex="0" onclick="addSauce2()" style="display:none;">
-    加第二種醬
+    加第二種醬 Add second sauce
   </div>
   <div id="sauce2List" class="stack-gap"></div>
   <div id="sauceSwipeHint" class="swipe-hint" style="display:none;">左滑刪除 Swipe to delete</div>
@@ -157,7 +155,7 @@
 <div id="addonModal" class="sheet-modal" role="dialog" aria-modal="true" aria-labelledby="addonModalTitle">
   <div class="sheet-panel" tabindex="-1">
     <div class="sheet-grabber-wrap" aria-hidden="true"><div class="sheet-grabber"></div></div>
-    <div id="addonModalTitle" class="modal-panel-title">選擇加料</div>
+    <div id="addonModalTitle" class="modal-panel-title">選擇加料 Select Add-ons</div>
     <div id="addonCategoriesWrapper" class="modal-categories-wrapper">
       <div id="addonModalCategories" class="modal-categories"></div>
     </div>
@@ -168,7 +166,7 @@
 <div id="mainModal" class="sheet-modal" role="dialog" aria-modal="true" aria-labelledby="mainModalTitle">
   <div class="sheet-panel" tabindex="-1">
     <div class="sheet-grabber-wrap" aria-hidden="true"><div class="sheet-grabber"></div></div>
-    <div id="mainModalTitle" class="modal-panel-title">選擇主餐</div>
+    <div id="mainModalTitle" class="modal-panel-title">選擇主餐 Select Main</div>
     <div id="mainCategoriesWrapper" class="modal-categories-wrapper">
       <div id="mainModalCategories" class="modal-categories"></div>
     </div>
@@ -179,7 +177,7 @@
 <div id="sauceModal" class="sheet-modal" role="dialog" aria-modal="true" aria-labelledby="sauceModalTitle">
   <div class="sheet-panel" tabindex="-1">
     <div class="sheet-grabber-wrap" aria-hidden="true"><div class="sheet-grabber"></div></div>
-    <div id="sauceModalTitle" class="modal-panel-title">選擇醬料</div>
+    <div id="sauceModalTitle" class="modal-panel-title">選擇醬料 Select Sauce</div>
     <div id="sauceItems" class="modal-items"></div>
   </div>
 </div>
@@ -187,7 +185,7 @@
   <div class="sheet-panel" tabindex="-1">
     <div class="sheet-grabber-wrap" aria-hidden="true"><div class="sheet-grabber"></div></div>
     <div class="modal-head-row">
-      <div id="historyModalTitle" class="modal-panel-title">歷史紀錄</div>
+      <div id="historyModalTitle" class="modal-panel-title">歷史紀錄 History</div>
       <button type="button" id="historyClearBtn" class="modal-clear-btn" onclick="clearHistory()">清除 Clear</button>
     </div>
     <div id="historyItems" class="modal-items"></div>
@@ -196,11 +194,11 @@
 <div id="quickSearchModal" class="sheet-modal" role="dialog" aria-modal="true" aria-labelledby="quickSearchModalTitle">
   <div class="sheet-panel" tabindex="-1">
     <div class="sheet-grabber-wrap" aria-hidden="true"><div class="sheet-grabber"></div></div>
-    <div id="quickSearchModalTitle" class="modal-panel-title">快速搜尋</div>
+    <div id="quickSearchModalTitle" class="modal-panel-title">快速搜尋 Quick Search</div>
     <input id="quickSearchInput" class="modal-search-input" type="text" placeholder="Search" autocomplete="off" oninput="renderQuickSearchItems()">
     <div id="quickSearchItems" class="modal-items"></div>
   </div>
 </div>
-<script src="app.js?v=20260709"></script>
+<script src="app.js?v=20260725"></script>
 </body>
 </html>
