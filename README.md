@@ -8,7 +8,7 @@ Unofficial mobile-first calorie and protein calculator for 6" Subway® subs, wit
 
 ## 🚀 Live Demo / 線上版本
 
-https://thom436.github.io/subway-calculator/
+https://tylin496.github.io/subway-calculator/
 
 ## ✨ Features / 功能特色
 
