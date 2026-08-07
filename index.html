@@ -9,6 +9,17 @@
 
 <link rel="icon" href="./favicon.png" type="image/png" />
 <link rel="apple-touch-icon" href="./icon-pwa.png" />
+<link rel="manifest" href="./site.webmanifest" />
+
+<!-- Installed-PWA behaviour. `-capable` + display:standalone in the manifest is
+     what drops Safari's chrome; black-translucent then lets the page draw under
+     the status bar, which .app-shell already pads for via env(safe-area-inset-top).
+     theme-color is media-gated because the palette is CSS-only (no JS theme
+     controller) — the two values mirror --html-bg in :root and in the dark block. -->
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#F4F4F1" />
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#070a0f" />
 
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css?v=20260725">
