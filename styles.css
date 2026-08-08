@@ -2228,17 +2228,6 @@ body.modal-open .result {
     width: 100%;
     max-width: 100%;
   }
-
-  .app-header {
-    flex-direction: column;
-    gap: var(--space-3);
-  }
-
-  .app-header .top-actions {
-    position: static;
-    align-self: stretch;
-    justify-content: flex-end;
-  }
 }
 
 @media (prefers-color-scheme: dark) {
