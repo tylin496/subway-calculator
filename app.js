@@ -20,7 +20,6 @@ main:{
 "蛋沙拉":{cal:421,protein:17},
 "墨西哥辣牛":{cal:320,protein:17},
 "鷹嘴豆泥餅":{cal:425,protein:16},
-"墨西哥手撕豬":{cal:321,protein:16},
 "素食蔬菜":{cal:250,protein:10}
 },
 
@@ -41,7 +40,6 @@ addon:{
 "哈燒起司總匯":{cal:71,protein:8},
 "墨西哥辣牛":{cal:70,protein:7},
 "培根(1條)":{cal:24,protein:2},
-"墨西哥手撕豬":{cal:118,protein:9},
 "義大利經典":{cal:159,protein:12},
 "義大利牛肉丸":{cal:133,protein:10},
 "切絲巧達起司":{cal:55,protein:3.3},
@@ -88,8 +86,7 @@ const mainNameMap = {
   "厚切嫩牛":"Diced Beef",
   "鷹嘴豆泥餅":"Falafel",
   "辣豆瓣嫩牛":"Mala Beef",
-  "雙重起司厚牛":"Double Cheese Steak",
-  "墨西哥手撕豬":"Mexican Pulled Pork"
+  "雙重起司厚牛":"Double Cheese Steak"
 }
 
 const sauceNameMap = {
@@ -1339,7 +1336,7 @@ function attachSwipeToReveal(row, onSwipeAction, canSwipe){
 const mainSeedGroups = {
   "牛肉系": ["厚切嫩牛","燒烤牛肉","墨西哥辣牛","義大利牛肉丸"],
   "雞肉系": ["照燒雞肉","鮮嫩雞柳","香烤雞肉","嫩切雞肉"],
-  "豬肉冷切系": ["火腿","百味俱樂部","義大利經典","哈燒起司總匯","墨西哥手撕豬"],
+  "豬肉冷切系": ["火腿","百味俱樂部","義大利經典","哈燒起司總匯"],
   "海鮮蛋素食": ["鮪魚","蛋沙拉","鷹嘴豆泥餅","素食蔬菜"]
 }
 
@@ -1351,7 +1348,7 @@ const addonSeedGroups = {
   "起司蛋配料": ["切絲巧達起司","英式切片起司(2片)","嫩煎蛋(1片)","酪梨泥(1球)","蛋沙拉(1球)","蛋沙拉(2球)"],
   "雞肉": ["鮮嫩雞柳","嫩切雞肉(3片)","嫩切雞肉(1片)","香烤雞肉","照燒雞肉"],
   "牛肉": ["厚切嫩牛","燒烤牛肉(3片/59g)","燒烤牛肉(1片/19.5g)","墨西哥辣牛","辣豆瓣嫩牛","義大利牛肉丸"],
-  "豬肉冷切": ["火腿(4片)","火腿(1片)","墨西哥手撕豬","義大利經典","百味俱樂部","哈燒起司總匯","義式辣香腸(1片)","義式煙燻臘腸(1片)","培根(1條)"],
+  "豬肉冷切": ["火腿(4片)","火腿(1片)","義大利經典","百味俱樂部","哈燒起司總匯","義式辣香腸(1片)","義式煙燻臘腸(1片)","培根(1條)"],
   "海鮮素食": ["鮪魚","鷹嘴豆泥餅(1顆)","鷹嘴豆泥餅(3顆)"]
 }
 
@@ -1599,8 +1596,7 @@ const addonNameMap = {
   "切絲巧達起司":"Shredded Cheddar Cheese",
   "鷹嘴豆泥餅(3顆)":"Falafel (3 pieces)",
   "鷹嘴豆泥餅(1顆)":"Falafel (1 piece)",
-  "辣豆瓣嫩牛":"Mala Beef",
-  "墨西哥手撕豬":"Mexican Pulled Pork"
+  "辣豆瓣嫩牛":"Mala Beef"
 }
 
 const addonGroups = buildGroups(addonSeedGroups, Object.keys(data.addon), "其他")
@@ -2911,6 +2907,13 @@ function renderHeroCalOdometer(el, value, decimals){
   }
 }
 
+// Lets an embedding page (e.g. Foodbook) mirror the current build without
+// polling the DOM — same-origin only, so a wildcard target is fine here.
+function postSubwayState(state){
+  if(window.parent === window) return
+  window.parent.postMessage({ source: "subway-calculator", ...state }, "*")
+}
+
 function calc(opts = {}){
 let total = {cal:0, protein:0}
 let breakdown = []
@@ -2933,6 +2936,7 @@ let main = document.getElementById("main").value
   if(heroStats) heroStats.style.display = "none"
   if(heroEmpty) heroEmpty.style.display = ""
   updateResultVisibility()
+  postSubwayState({ hasSelection: false })
   return
 }
 
@@ -3067,6 +3071,7 @@ lastMainForFeedback = main
     if (navigator.vibrate) navigator.vibrate(5)
   }
   updateResultVisibility()
+  postSubwayState({ hasSelection: true, mainName: main, kcal: total.cal, protein: total.protein })
 }
 
 const SHEET_DESKTOP_MQ = window.matchMedia("(min-width: 940px)")
