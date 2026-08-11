@@ -2829,6 +2829,45 @@ function copyResultSummary(){
   document.body.removeChild(ta)
 }
 
+function buildDatabaseExportText(){
+  const payload = {
+    updatedAt: "2026-03-31",
+    source: "https://subway.com.tw/GoWeb2/include/meals-nutrition.html",
+    main: data.main,
+    addon: data.addon,
+    sauce: data.sauce,
+    mainNameMap,
+    sauceNameMap,
+    doubleMeatMap
+  }
+  return JSON.stringify(payload, null, 2)
+}
+
+function copyDatabaseSchema(){
+  const text = buildDatabaseExportText()
+  const notify = ()=> showCopyToast("已複製資料庫 Schema Copied")
+
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(text).then(notify).catch(()=>{})
+    return
+  }
+
+  const ta = document.createElement("textarea")
+  ta.value = text
+  ta.style.position = "fixed"
+  ta.style.opacity = "0"
+  document.body.appendChild(ta)
+  ta.focus()
+  ta.select()
+  try {
+    document.execCommand("copy")
+    notify()
+  } catch (_) {
+    // no-op
+  }
+  document.body.removeChild(ta)
+}
+
 function buildOdometerColumn(){
   const col = document.createElement("span")
   col.className = "odo-col"

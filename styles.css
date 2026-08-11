@@ -909,6 +909,22 @@ body.swipe-dragging {
   font-weight: 580;
 }
 
+.footer-export-btn {
+  display: block;
+  margin-top: 10px;
+  padding: 0;
+  background: none;
+  border: none;
+  font: inherit;
+  font-size: 0.625rem;
+  font-weight: 580;
+  letter-spacing: 0.2px;
+  color: #8a93a6;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
 .result {
   position: fixed;
   z-index: 9999;
@@ -1457,6 +1473,10 @@ input[type="checkbox"]:active {
 
   .footer-inline-link {
     color: #73d892;
+  }
+
+  .footer-export-btn {
+    color: #767f91;
   }
 
   .modal-checkmark {
