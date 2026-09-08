@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="./icon-pwa.png" />
 
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20260810">
+<link rel="stylesheet" href="styles.css?v=20260908">
 </head>
 
 <body>
@@ -61,10 +61,15 @@
     </div>
     <div class="hero-actions">
       <button id="copyShareBtn" class="hero-action-btn hero-action-btn--primary" type="button" aria-label="複製結果 Copy result" title="複製結果 Copy result" onclick="copyResultSummary()">
-        <svg class="hero-btn-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <rect x="9" y="9" width="10" height="10" rx="2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M5 15V5a2 2 0 0 1 2-2h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
+        <span class="copy-icon-swap">
+          <svg class="hero-btn-icon copy-icon-stack" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="9" y="9" width="10" height="10" rx="2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M5 15V5a2 2 0 0 1 2-2h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <svg class="hero-btn-icon copy-icon-check" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
       </button>
       <button id="saveComboBtn" class="hero-action-btn result-save-btn" type="button" aria-label="收藏 Save" title="收藏 Save" onclick="saveCurrentComboFromResult()">
         <svg class="hero-btn-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -200,6 +205,6 @@
     <div id="quickSearchItems" class="modal-items"></div>
   </div>
 </div>
-<script src="app.js?v=20260810"></script>
+<script src="app.js?v=20260908"></script>
 </body>
 </html>

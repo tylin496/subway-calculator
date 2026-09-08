@@ -2797,6 +2797,9 @@ function copyResultSummary(){
   const defaultAria = "複製結果 Copy result"
   const setCopiedLabel = ()=>{
     if(!btn) return
+    // Restart the check-mark animation when copying again mid-confirmation.
+    btn.classList.remove("copied")
+    void btn.offsetWidth
     btn.classList.add("copied")
     btn.setAttribute("aria-label", copiedAria)
     btn.setAttribute("title", copiedAria)

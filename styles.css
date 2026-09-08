@@ -1685,7 +1685,8 @@ input[type="checkbox"]:active {
   background: rgba(0,0,0,0.12);
 }
 
-.result-save-btn.saved {
+.result-save-btn.saved,
+.hero-action-btn.copied {
   color: var(--ios-green-btn);
   border-color: rgba(236,81,34,0.28);
   background: rgba(236,81,34,0.08);
@@ -1693,6 +1694,53 @@ input[type="checkbox"]:active {
 
 .result-save-btn.saved .hero-heart-path {
   fill: currentColor;
+}
+
+/* Copy icon and check share one 13px cell so the button never changes width
+   when the confirmation swaps in. */
+.copy-icon-swap {
+  position: relative;
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+
+.copy-icon-swap .hero-btn-icon {
+  position: absolute;
+  inset: 0;
+  transform-origin: center;
+  transition: opacity var(--motion-fast) var(--ease-out-soft),
+              transform 0.24s var(--ease-out-soft);
+}
+
+.copy-icon-check {
+  opacity: 0;
+  transform: scale(0.72);
+}
+
+.hero-action-btn.copied .copy-icon-stack {
+  opacity: 0;
+  transform: scale(0.72);
+}
+
+.hero-action-btn.copied .copy-icon-check {
+  opacity: 1;
+  transform: scale(1);
+  animation: copyCheckIn 0.48s cubic-bezier(0.34, 1.45, 0.64, 1);
+}
+
+@keyframes copyCheckIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.72);
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 
