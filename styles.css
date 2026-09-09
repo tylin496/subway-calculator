@@ -2179,6 +2179,14 @@ body.modal-open .result {
   display: none;
 }
 
+/* The row scrolls horizontally, so each category keeps its label on one line.
+   Without this the buttons shrink instead of overflowing and labels such as
+   "豬肉冷切系" break into two cramped lines at 390px and narrower. */
+.modal-categories button {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
 .modal-items {
   flex: 1;
   min-height: 0;

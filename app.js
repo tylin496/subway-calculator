@@ -3083,11 +3083,16 @@ const calEl = document.getElementById("calVal")
 const proEl = document.getElementById("proVal")
 
 const calDecimals = (Math.round(total.cal * 10) % 10 === 0) ? 0 : 1
+// Protein follows the same rule as calories so the displayed total matches
+// formatProtein() in the summary and copied text: a few add-ons carry 0.1
+// grams (cheese, egg mash), and rounding those away here showed 30 next to a
+// copied "30.3 g".
+const proteinDecimals = (Math.round(total.protein * 10) % 10 === 0) ? 0 : 1
 const calChanged = Math.abs(total.cal - lastCal) > 0.05
 const proteinChanged = Math.abs(total.protein - lastProtein) > 0.05
 
 animateNumber(calEl, lastCal, total.cal, calDecimals)
-animateNumber(proEl, lastProtein, total.protein, 0)
+animateNumber(proEl, lastProtein, total.protein, proteinDecimals)
 if(calChanged) bumpResultStat(calEl)
 if(proteinChanged) bumpResultStat(proEl)
 
@@ -3107,7 +3112,7 @@ if(opts.deferHero){
   pendingHeroFlight = null
   renderHeroCalOdometer(heroCalEl, total.cal, calDecimals)
 }
-animateNumber(heroProEl, lastProtein, total.protein, 0)
+animateNumber(heroProEl, lastProtein, total.protein, proteinDecimals)
 if(heroEffEl) heroEffEl.textContent = totalEfficiency ? `· ${totalEfficiency}` : ""
 
 lastCal = total.cal
