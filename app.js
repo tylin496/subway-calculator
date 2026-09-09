@@ -293,11 +293,6 @@ function buildGroups(seedGroups, allItems, extraGroupName = "其他"){
   return groups
 }
 
-function getSelectionHighlightColor(){
-  const isDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
-  return isDark ? "rgba(47,168,79,0.22)" : "#edf9f0"
-}
-
 function isDarkMode(){
   return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
 }
@@ -608,10 +603,21 @@ function saveCurrentComboFromResult(){
 }
 
 const HEART_PARTICLE_PATH = "M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
-const HEART_PARTICLE_COLORS = ["#34C759", "#5ec87a", "#FFC20E", "#00843D", "#8fe3a8"]
+// Read from the stylesheet so JS-driven feedback follows the design tokens
+// (and dark mode) instead of drifting the way the old hard-coded greens did.
+function cssToken(name, fallback){
+  const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim()
+  return v || fallback
+}
+
+function heartParticleColors(){
+  const accent = cssToken("--accent-strong", "#ec5122")
+  return [accent, "#ff8a4c", "#ffc20e", "#ffb08a", accent]
+}
 
 function burstSaveHeart(btn, count = 14){
   if(!btn || prefersReducedMotion()) return
+  const particleColors = heartParticleColors()
   const rect = btn.getBoundingClientRect()
   const cx = rect.left + rect.width / 2
   const cy = rect.top + rect.height / 2
@@ -626,7 +632,7 @@ function burstSaveHeart(btn, count = 14){
   for(let i = 0; i < count; i++){
     const isHeart = i % 3 === 0
     const el = isHeart ? document.createElementNS("http://www.w3.org/2000/svg", "svg") : document.createElement("div")
-    const color = HEART_PARTICLE_COLORS[i % HEART_PARTICLE_COLORS.length]
+    const color = particleColors[i % particleColors.length]
     el.style.position = "fixed"
     el.style.left = cx + "px"
     el.style.top = cy + "px"
@@ -793,7 +799,7 @@ function renderHistoryItems(){
     const empty = document.createElement("div")
     empty.style.padding = "14px 12px"
     empty.style.fontSize = "0.8125rem"
-    empty.style.color = "#8e8e93"
+    empty.style.color = "var(--ink-3)"
     empty.textContent = "尚無紀錄 No history yet"
     itemsEl.appendChild(empty)
     return
@@ -804,7 +810,6 @@ function renderHistoryItems(){
   history.forEach(combo=>{
     const div = document.createElement("div")
     div.style.padding = "12px"
-    div.style.borderBottom = "1px solid #eee"
     div.style.cursor = "pointer"
     div.style.display = "flex"
     div.style.justifyContent = "space-between"
@@ -1492,7 +1497,6 @@ function renderMainItems(group){
 
     const div = document.createElement("div")
     div.style.padding = "12px"
-    div.style.borderBottom = "1px solid #eee"
     div.style.cursor = "pointer"
     div.style.display = "flex"
     div.style.justifyContent = "space-between"
@@ -1538,7 +1542,7 @@ function renderMainItems(group){
     const empty = document.createElement("div")
     empty.style.padding = "14px 12px"
     empty.style.fontSize = "0.8125rem"
-    empty.style.color = "#8e8e93"
+    empty.style.color = "var(--ink-3)"
     empty.textContent = query ? "找不到符合的口味 No matching flavor" : "此分類目前沒有項目"
     itemsEl.appendChild(empty)
     return
@@ -1694,7 +1698,7 @@ function renderAddonItems(group){
     const empty = document.createElement("div")
     empty.style.padding = "14px 12px"
     empty.style.fontSize = "0.8125rem"
-    empty.style.color = "#8e8e93"
+    empty.style.color = "var(--ink-3)"
     empty.textContent = query ? "找不到符合的加料 No matching add-ons" : "此分類目前沒有項目"
     itemsEl.appendChild(empty)
     return
@@ -1705,7 +1709,6 @@ function renderAddonItems(group){
 
     const div = document.createElement("div")
     div.style.padding = "12px"
-    div.style.borderBottom = "1px solid #eee"
     div.style.cursor = "pointer"
     div.style.display = "flex"
     div.style.justifyContent = "space-between"
@@ -1807,7 +1810,7 @@ function renderQuickSearchItems(){
     const hint = document.createElement("div")
     hint.style.padding = "14px 12px"
     hint.style.fontSize = "0.8125rem"
-    hint.style.color = "#8e8e93"
+    hint.style.color = "var(--ink-3)"
     hint.textContent = "輸入關鍵字以搜尋口味、加料、醬料 Search flavors, add-ons, sauces"
     itemsEl.appendChild(hint)
     return
@@ -1845,7 +1848,7 @@ function renderQuickSearchItems(){
     const empty = document.createElement("div")
     empty.style.padding = "14px 12px"
     empty.style.fontSize = "0.8125rem"
-    empty.style.color = "#8e8e93"
+    empty.style.color = "var(--ink-3)"
     empty.textContent = "找不到符合項目 No matching items"
     itemsEl.appendChild(empty)
     return
@@ -1865,7 +1868,6 @@ function renderQuickSearchItems(){
   const renderMainItem = (name)=>{
     const row = document.createElement("div")
     row.style.padding = "12px"
-    row.style.borderBottom = "1px solid #eee"
     row.style.cursor = "pointer"
     row.style.display = "flex"
     row.style.justifyContent = "space-between"
@@ -1908,7 +1910,6 @@ function renderQuickSearchItems(){
   const renderAddonItem = (name)=>{
     const row = document.createElement("div")
     row.style.padding = "12px"
-    row.style.borderBottom = "1px solid #eee"
     row.style.cursor = "pointer"
     row.style.display = "flex"
     row.style.justifyContent = "space-between"
@@ -1952,7 +1953,6 @@ function renderQuickSearchItems(){
   const renderSauceItem = (name)=>{
     const row = document.createElement("div")
     row.style.padding = "12px"
-    row.style.borderBottom = "1px solid #eee"
     row.style.cursor = "pointer"
     row.style.display = "flex"
     row.style.justifyContent = "space-between"
@@ -2227,10 +2227,10 @@ function landHeroCalFlight(){
     ], { duration: 420, easing: EASE_SPRING })
   }
 
-  const flashColor = isDarkMode() ? "#F2F2F7" : "#1C1C1E"
+  const flashColor = cssToken("--ink", isDarkMode() ? "#F2F2F7" : "#1C1C1E")
   heroCalEl.animate([
     { color: flashColor },
-    { color: "#34C759", offset: 0.3 },
+    { color: cssToken("--accent-strong", "#ec5122"), offset: 0.3 },
     { color: flashColor }
   ], { duration: 700, easing: "ease-out" })
 }
@@ -2449,7 +2449,7 @@ function renderSauceItems(){
     const empty = document.createElement("div")
     empty.style.padding = "14px 12px"
     empty.style.fontSize = "0.8125rem"
-    empty.style.color = "#8e8e93"
+    empty.style.color = "var(--ink-3)"
     empty.textContent = "目前沒有可選醬料 No sauces available"
     itemsEl.appendChild(empty)
     return
@@ -2457,7 +2457,6 @@ function renderSauceItems(){
   const renderSauceItem = (name)=>{
     const div = document.createElement("div")
     div.style.padding = "12px"
-    div.style.borderBottom = "1px solid #eee"
     div.style.cursor = "pointer"
     div.style.display = "flex"
     div.style.justifyContent = "space-between"
@@ -2741,7 +2740,7 @@ function animateNumber(el, start, end, decimals=1, duration=300) {
 function showResultHint(){
   const resultEl = document.getElementById("result")
   if(resultMode !== "hint"){
-    resultEl.innerHTML = `<div style="font-size:0.875rem;line-height:1.4;color:#8e8e93;font-weight:500;letter-spacing:0.01em;">可選擇醬料，或留空不加醬 Sauce is optional</div>`
+    resultEl.innerHTML = `<div style="font-size:0.875rem;line-height:1.4;color:var(--ink-3);font-weight:500;letter-spacing:0.01em;">可選擇醬料，或留空不加醬 Sauce is optional</div>`
     resultMode = "hint"
   }
 }

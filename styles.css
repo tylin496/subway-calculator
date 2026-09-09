@@ -1136,11 +1136,12 @@ button {
   background: transparent !important;
 }
 
-#mainItems > div,
-#addonItems > div,
-#sauceItems > div,
-#quickSearchItems > div {
-  border-bottom: 1px solid var(--rule) !important;
+/* Every list panel shares .modal-items, so one token-based rule covers them
+   all. These rows used to set the border inline from JS at a fixed #eee, with
+   this rule overriding four of the five containers by !important; the history
+   list was not on the list and kept a near-white divider in dark mode. */
+.modal-items > div {
+  border-bottom: 1px solid var(--rule);
 }
 
 #mainItems,
@@ -1430,13 +1431,6 @@ input[type="checkbox"]:active {
   #mainCategoriesWrapper,
   #addonCategoriesWrapper {
     background: transparent !important;
-  }
-
-  #mainItems > div,
-  #addonItems > div,
-  #sauceItems > div,
-  #quickSearchItems > div {
-    border-bottom: 1px solid rgba(255,255,255,0.08) !important;
   }
 
   .picker-field {
@@ -2136,20 +2130,6 @@ body.modal-open .result {
   transform: translateY(0);
 }
 
-#mainItems > div,
-#addonItems > div,
-#sauceItems > div,
-#quickSearchItems > div {
-  transition: background-color var(--motion-fast) ease;
-}
-
-#mainItems > div:active,
-#addonItems > div:active,
-#sauceItems > div:active,
-#quickSearchItems > div:active {
-  background-color: rgba(207, 73, 26, 0.1);
-}
-
 .sheet-grabber-wrap {
   flex-shrink: 0;
   padding: 14px 0 12px;
@@ -2217,21 +2197,13 @@ body.modal-open .result {
   padding-bottom: 6px;
 }
 
-#mainItems > div,
-#addonItems > div,
-#sauceItems > div,
-#quickSearchItems > div,
-#historyItems > div {
+.modal-items > div {
   border-radius: 12px;
   -webkit-tap-highlight-color: transparent;
   transition: background-color 0.16s ease, transform 0.16s var(--ease-out-soft);
 }
 
-#mainItems > div:active,
-#addonItems > div:active,
-#sauceItems > div:active,
-#quickSearchItems > div:active,
-#historyItems > div:active {
+.modal-items > div:active {
   background-color: var(--result-row-active);
   transform: scale(0.985);
 }
