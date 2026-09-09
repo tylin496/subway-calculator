@@ -115,7 +115,7 @@ const doubleMeatMap = {
 
 const NO_SAUCE_LABEL = "不加醬 No sauce"
 let lastShareText = ""
-let copyShareResetTimer = null
+const copiedResetTimers = new WeakMap()
 let suppressPickerTapUntil = 0
 const RECENT_LIMIT = 3
 const RECENT_KEYS = {
@@ -2789,35 +2789,20 @@ function showCopyToast(text){
   }, 1200)
 }
 
-function copyResultSummary(){
-  if(!lastShareText) return
+const COPIED_HOLD_MS = 1800
 
-  const btn = document.getElementById("copyShareBtn")
-  const copiedAria = "已複製 Copied"
-  const defaultAria = "複製結果 Copy result"
-  const setCopiedLabel = ()=>{
-    if(!btn) return
-    // Restart the check-mark animation when copying again mid-confirmation.
-    btn.classList.remove("copied")
-    void btn.offsetWidth
-    btn.classList.add("copied")
-    btn.setAttribute("aria-label", copiedAria)
-    btn.setAttribute("title", copiedAria)
-    if(copyShareResetTimer) clearTimeout(copyShareResetTimer)
-    copyShareResetTimer = setTimeout(()=>{
-      btn.classList.remove("copied")
-      btn.setAttribute("aria-label", defaultAria)
-      btn.setAttribute("title", defaultAria)
-    }, 1800)
-  }
+// One clipboard path for every copy action: the async API where it is
+// available, hidden-textarea fallback everywhere else.
+function writeToClipboard(text, onCopied){
+  if(!text) return
 
   if(navigator.clipboard && window.isSecureContext){
-    navigator.clipboard.writeText(lastShareText).then(setCopiedLabel).catch(()=>{})
+    navigator.clipboard.writeText(text).then(onCopied).catch(()=>{})
     return
   }
 
   const ta = document.createElement("textarea")
-  ta.value = lastShareText
+  ta.value = text
   ta.style.position = "fixed"
   ta.style.opacity = "0"
   document.body.appendChild(ta)
@@ -2825,11 +2810,49 @@ function copyResultSummary(){
   ta.select()
   try {
     document.execCommand("copy")
-    setCopiedLabel()
+    onCopied()
   } catch (_) {
     // no-op
   }
   document.body.removeChild(ta)
+}
+
+// Hold a button in its confirmed state: .copied drives the check-mark swap in
+// CSS, and the accessible name follows. Buttons that carry their own visible
+// label pass labelEl so the text swaps with it; icon-only buttons leave it out
+// and are announced through aria-label alone.
+function flashCopiedState(btn, defaultLabel, copiedLabel, labelEl){
+  if(!btn) return
+
+  const setLabel = text => {
+    if(btn.hasAttribute("aria-label")) btn.setAttribute("aria-label", text)
+    if(btn.hasAttribute("title")) btn.setAttribute("title", text)
+    if(labelEl) labelEl.textContent = text
+  }
+
+  // Restart the animation when the button is pressed again mid-confirmation.
+  btn.classList.remove("copied")
+  void btn.offsetWidth
+  btn.classList.add("copied")
+  setLabel(copiedLabel)
+
+  clearTimeout(copiedResetTimers.get(btn))
+  copiedResetTimers.set(btn, setTimeout(()=>{
+    btn.classList.remove("copied")
+    setLabel(defaultLabel)
+  }, COPIED_HOLD_MS))
+}
+
+function copyResultSummary(){
+  if(!lastShareText) return
+
+  writeToClipboard(lastShareText, ()=>{
+    flashCopiedState(
+      document.getElementById("copyShareBtn"),
+      "複製結果 Copy result",
+      "已複製 Copied"
+    )
+  })
 }
 
 function buildDatabaseExportText(){
@@ -2847,28 +2870,14 @@ function buildDatabaseExportText(){
 }
 
 function copyDatabaseSchema(){
-  const text = buildDatabaseExportText()
-  const notify = ()=> showCopyToast("已複製資料庫 Schema Copied")
-
-  if(navigator.clipboard && window.isSecureContext){
-    navigator.clipboard.writeText(text).then(notify).catch(()=>{})
-    return
-  }
-
-  const ta = document.createElement("textarea")
-  ta.value = text
-  ta.style.position = "fixed"
-  ta.style.opacity = "0"
-  document.body.appendChild(ta)
-  ta.focus()
-  ta.select()
-  try {
-    document.execCommand("copy")
-    notify()
-  } catch (_) {
-    // no-op
-  }
-  document.body.removeChild(ta)
+  writeToClipboard(buildDatabaseExportText(), ()=>{
+    flashCopiedState(
+      document.getElementById("exportDbBtn"),
+      "複製資料庫 Copy DB schema",
+      "已複製資料庫 Schema copied",
+      document.getElementById("exportDbLabel")
+    )
+  })
 }
 
 function buildOdometerColumn(){
