@@ -1047,25 +1047,6 @@ button {
   color: #ec5122;
 }
 
-.result-hero-stat {
-  font-size: 1.625rem;
-  line-height: 1.12;
-  letter-spacing: -0.01em;
-  color: #ec5122;
-  font-weight: 700;
-  margin-top: 8px;
-}
-
-.result-hero-stat.stat-bump {
-  animation: statBump 0.42s var(--ease-spring);
-}
-
-@keyframes statBump {
-  0% { transform: scale(1); }
-  35% { transform: scale(1.03); }
-  100% { transform: scale(1); }
-}
-
 
 .result-save-btn:disabled {
   pointer-events: none;
@@ -1173,6 +1154,33 @@ button {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
   animation: toastIn 0.36s var(--ease-spring);
+}
+
+/* Only a toast offering an action takes pointer events; a plain one stays
+   inert so it never swallows a tap meant for the controls beneath it. */
+.copy-toast--action {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.copy-toast--action.show {
+  pointer-events: auto;
+}
+
+.copy-toast__action {
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-weight: 700;
+  color: #ff9068;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.copy-toast__action:active {
+  opacity: 0.6;
 }
 
 @keyframes toastIn {
@@ -2185,6 +2193,20 @@ body.modal-open .result {
 .modal-categories button {
   flex: 0 0 auto;
   white-space: nowrap;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--rule);
+  background: var(--bg-card);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+}
+
+.modal-categories button.is-active {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+  color: #fff;
 }
 
 .modal-items {

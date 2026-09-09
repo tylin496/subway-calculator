@@ -1000,13 +1000,11 @@ function maybePeekHint(row, type){
   }, 320)
 }
 
+// Styling lives in CSS so these pills follow the design tokens (including
+// dark mode) instead of the hard-coded colours they used to be given inline,
+// which the token reskin could not reach.
 function styleModalCategoryButton(btn, active){
-  const dark = isDarkMode()
-  btn.style.padding = "8px 12px"
-  btn.style.borderRadius = "999px"
-  btn.style.border = dark ? "1px solid #3a3a3c" : "1px solid #ddd"
-  btn.style.background = active ? "#2fa84f" : (dark ? "#2c2c2e" : "#fff")
-  btn.style.color = active ? "#f3fff7" : (dark ? "#f2f2f7" : "#000")
+  btn.classList.toggle("is-active", active)
 }
 
 function closeSwipeRow(row){
@@ -2740,15 +2738,6 @@ function animateNumber(el, start, end, decimals=1, duration=300) {
   el._numRaf = requestAnimationFrame(step);
 }
 
-function bumpResultStat(el){
-  if(!el) return
-  const row = el.closest(".result-hero-stat")
-  if(!row) return
-  row.classList.remove("stat-bump")
-  void row.offsetWidth
-  row.classList.add("stat-bump")
-}
-
 function showResultHint(){
   const resultEl = document.getElementById("result")
   if(resultMode !== "hint"){
@@ -2773,20 +2762,50 @@ function triggerResultPop(){
   // sticky result card removed
 }
 
-function showCopyToast(text){
+function hideToast(){
+  const toast = document.getElementById("copyToast")
+  if(toast) toast.classList.remove("show")
+  if(copyToastTimer) clearTimeout(copyToastTimer)
+}
+
+// A plain toast just reports; one given an action can be acted on, so it stays
+// up long enough to reach and accepts taps (the plain one never does, to keep
+// it out of the way of the controls underneath).
+function showToast(text, action){
   let toast = document.getElementById("copyToast")
   if(!toast){
     toast = document.createElement("div")
     toast.id = "copyToast"
-    toast.className = "copy-toast"
     document.body.appendChild(toast)
   }
-  toast.textContent = text
+  toast.className = action ? "copy-toast copy-toast--action" : "copy-toast"
+  toast.textContent = ""
+
+  const label = document.createElement("span")
+  label.textContent = text
+  toast.appendChild(label)
+
+  if(action){
+    const btn = document.createElement("button")
+    btn.type = "button"
+    btn.className = "copy-toast__action"
+    btn.textContent = action.label
+    btn.onclick = ()=>{
+      hideToast()
+      action.onAct()
+    }
+    toast.appendChild(btn)
+  }
+
   toast.classList.add("show")
   if(copyToastTimer) clearTimeout(copyToastTimer)
   copyToastTimer = setTimeout(()=>{
     toast.classList.remove("show")
-  }, 1200)
+  }, action ? 5000 : 1200)
+}
+
+function showCopyToast(text){
+  showToast(text)
 }
 
 const COPIED_HOLD_MS = 1800
@@ -3079,22 +3098,12 @@ lastShareText =
 ${zhShareLine}
 ${enShareLine}`
 
-const calEl = document.getElementById("calVal")
-const proEl = document.getElementById("proVal")
-
 const calDecimals = (Math.round(total.cal * 10) % 10 === 0) ? 0 : 1
 // Protein follows the same rule as calories so the displayed total matches
 // formatProtein() in the summary and copied text: a few add-ons carry 0.1
 // grams (cheese, egg mash), and rounding those away here showed 30 next to a
 // copied "30.3 g".
 const proteinDecimals = (Math.round(total.protein * 10) % 10 === 0) ? 0 : 1
-const calChanged = Math.abs(total.cal - lastCal) > 0.05
-const proteinChanged = Math.abs(total.protein - lastProtein) > 0.05
-
-animateNumber(calEl, lastCal, total.cal, calDecimals)
-animateNumber(proEl, lastProtein, total.protein, proteinDecimals)
-if(calChanged) bumpResultStat(calEl)
-if(proteinChanged) bumpResultStat(proEl)
 
 // Hero result
 const heroStats = document.getElementById("heroStats")
@@ -3324,6 +3333,8 @@ window.addEventListener("scroll", () => {
 })
 
 function resetAll(){
+  const undoCombo = getCurrentCombo()
+
   document.body.classList.add("resetting")
   setTimeout(()=> document.body.classList.remove("resetting"), 360)
   const resetBtn = document.querySelector(".reset-btn")
@@ -3360,4 +3371,11 @@ function resetAll(){
   updateAddonUI()
   updateSectionClearButtons()
   calc()
+
+  if(comboIsValid(undoCombo)){
+    showToast("已重設 Reset", {
+      label: "復原 Undo",
+      onAct: ()=> applyCombo(undoCombo)
+    })
+  }
 }
