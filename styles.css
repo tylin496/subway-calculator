@@ -448,10 +448,6 @@ select:focus-visible {
   content: none;
 }
 
-.picker-field-with-minus::after {
-  content: none !important;
-}
-
 .picker-field::before {
   content: none;
 }
@@ -659,11 +655,6 @@ select:focus-visible {
   color: var(--ink-3);
   margin-top: var(--space-2);
   margin-bottom: var(--space-1);
-}
-
-.picker-field-with-minus {
-  padding-right: 12px;
-  transition: transform 0.2s ease;
 }
 
 .picker-select-flash {
@@ -1110,45 +1101,12 @@ button {
   z-index: 11000;
 }
 
-#mainModal,
-#addonModal,
-#sauceModal,
-#quickSearchModal {
-  background: var(--scrim-bg) !important;
-  backdrop-filter: var(--scrim-blur);
-  -webkit-backdrop-filter: var(--scrim-blur);
-}
-
-#mainModal > div,
-#addonModal > div,
-#sauceModal > div,
-#quickSearchModal > div {
-  background: var(--bg-card) !important;
-  color: var(--ink) !important;
-  border: 1px solid var(--rule) !important;
-  border-bottom: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-#mainCategoriesWrapper,
-#addonCategoriesWrapper {
-  background: transparent !important;
-}
-
 /* Every list panel shares .modal-items, so one token-based rule covers them
    all. These rows used to set the border inline from JS at a fixed #eee, with
    this rule overriding four of the five containers by !important; the history
    list was not on the list and kept a near-white divider in dark mode. */
 .modal-items > div {
   border-bottom: 1px solid var(--rule);
-}
-
-#mainItems,
-#addonItems,
-#sauceItems,
-#quickSearchItems {
-  overflow-x: hidden !important;
 }
 
 .copy-toast.show {
@@ -1408,29 +1366,6 @@ input[type="checkbox"]:active {
 
   input[type="checkbox"]::after {
     background: #fff;
-  }
-
-  #mainModal > div,
-  #addonModal > div,
-  #sauceModal > div,
-  #quickSearchModal > div {
-    background: var(--bg-card) !important;
-    color: var(--ink) !important;
-    border-color: var(--rule) !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-  }
-
-  #mainModal,
-  #addonModal,
-  #sauceModal,
-  #quickSearchModal {
-    background: var(--scrim-bg) !important;
-  }
-
-  #mainCategoriesWrapper,
-  #addonCategoriesWrapper {
-    background: transparent !important;
   }
 
   .picker-field {
@@ -2102,8 +2037,6 @@ body.modal-open .result {
   border: 1px solid var(--rule);
   border-bottom: 0;
   box-shadow: var(--card-shadow);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
   overflow: hidden;
   isolation: isolate;
 }
@@ -2193,6 +2126,7 @@ body.modal-open .result {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  overflow-x: hidden;
   overscroll-behavior: contain;
   padding-bottom: 6px;
 }
@@ -2434,14 +2368,6 @@ body.modal-open .result {
     background: var(--scrim-bg);
   }
 
-  .sheet-panel {
-    background: var(--bg-card);
-    color: var(--ink);
-    border-color: var(--rule);
-    box-shadow: var(--card-shadow);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-  }
   .sheet-panel::after {
     background: linear-gradient(
       180deg,

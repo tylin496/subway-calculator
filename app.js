@@ -1368,7 +1368,6 @@ function updateMainPickerLabel(){
     picker.classList.remove("picker-field--bilingual-break")
     picker.classList.add("picker-field--placeholder")
     picker.classList.add("picker-field--plus")
-    picker.classList.remove("picker-field-with-minus")
     updateSectionClearButtons()
     return
   }
@@ -1377,7 +1376,6 @@ function updateMainPickerLabel(){
   setBilingualPickerText(picker, value, en)
   picker.classList.remove("picker-field--placeholder")
   picker.classList.remove("picker-field--plus")
-  picker.classList.remove("picker-field-with-minus")
   updateSectionClearButtons()
 }
 
@@ -2371,13 +2369,11 @@ function updateSaucePickerLabel(target = "sauce1"){
       picker.classList.remove("picker-field--bilingual-break")
       picker.classList.add("picker-field--placeholder")
       picker.classList.add("picker-field--plus")
-      picker.classList.remove("picker-field-with-minus")
     } else {
       const en = sauceNameMap[value] || ""
       setBilingualPickerText(picker, value, en)
       picker.classList.remove("picker-field--placeholder")
       picker.classList.remove("picker-field--plus")
-      picker.classList.remove("picker-field-with-minus")
     }
     updateSauce2Visibility()
     refreshSwipeValueFlags()
@@ -2396,13 +2392,11 @@ function updateSaucePickerLabel(target = "sauce1"){
       display.classList.remove("picker-field--bilingual-break")
       display.classList.add("picker-field--placeholder")
       display.classList.add("picker-field--plus")
-      display.classList.remove("picker-field-with-minus")
     } else {
       const en = sauceNameMap[value] || ""
       setBilingualPickerText(display, value, en)
       display.classList.remove("picker-field--placeholder")
       display.classList.remove("picker-field--plus")
-      display.classList.remove("picker-field-with-minus")
     }
   }
   updateSectionClearButtons()
