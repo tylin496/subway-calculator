@@ -1368,15 +1368,6 @@ input[type="checkbox"]:active {
     background: #fff;
   }
 
-  .picker-field {
-    background: var(--bg-soft) !important;
-    color: var(--ink) !important;
-    border: 1px solid var(--rule) !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    box-shadow: none !important;
-  }
-
   .picker-field:not(.picker-field--plus)::after {
     color: rgba(167,172,181,0.86);
   }
@@ -1389,20 +1380,6 @@ input[type="checkbox"]:active {
 
   .picker-field::before {
     content: none;
-  }
-
-  .picker-field--placeholder {
-    color: var(--ink-3) !important;
-  }
-
-  .picker-field--plus {
-    color: var(--ink-3) !important;
-  }
-
-  .picker-field.picker-field--plus {
-    background: var(--bg-soft) !important;
-    border: 1px solid var(--rule) !important;
-    box-shadow: none !important;
   }
 
   .footer-detail {
@@ -1495,10 +1472,6 @@ input[type="checkbox"]:active {
     background: rgba(9,10,13,0.95);
     border: 1px solid #3b404b;
     color: #f2f2f7;
-  }
-
-  #mainPicker:not(.picker-field--placeholder) {
-    color: var(--ink) !important;
   }
 
 }
@@ -2307,6 +2280,37 @@ body.modal-open .result {
   .app-tagline {
     color: var(--ink-3);
   }
+
+  /* Relocated from the dark block above the base picker rules, where the
+     cascade put them first and every declaration needed !important to win.
+     Down here order alone settles it, so they are plain declarations. */
+  .picker-field {
+    background: var(--bg-soft);
+    color: var(--ink);
+    border: 1px solid var(--rule);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: none;
+  }
+
+  .picker-field--placeholder {
+    color: var(--ink-3);
+  }
+
+  .picker-field--plus {
+    color: var(--ink-3);
+  }
+
+  .picker-field.picker-field--plus {
+    background: var(--bg-soft);
+    border: 1px solid var(--rule);
+    box-shadow: none;
+  }
+
+  #mainPicker:not(.picker-field--placeholder) {
+    color: var(--ink);
+  }
+
 
   .hero-empty-state {
     color: var(--ink-3);
